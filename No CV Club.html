@@ -1,0 +1,423 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>No CV Club</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a light, club-style application. Struck-through "CV" hero, a question rail beside one question at a time, a membership card at the end, and a separate reviewer desk. Single light look by choice. */
+:root{
+  color-scheme:light;
+  --paper:#F3F7F4; --surface:#FFFFFF; --ink:#16251F; --muted:#56655E; --line:#DCE6E0;
+  --accent:#E8553A; --accent-ink:#FFFFFF; --accent-soft:#FDE9E4; --mark:#FFE27A; --mark-ink:#16251F;
+  --leaf:#2F7A5B; --leaf-soft:#E2F1E9; --sky:#2F6FB3; --sky-soft:#E3EEF9;
+  --star:#A86A00; --star-soft:#FFF1D2; --warn:#A64B12; --warn-soft:#FCEBDD;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.small{font-size:13.5px;color:var(--muted)}
+.btn{font:600 15px/1 var(--body);border-radius:999px;padding:14px 22px;border:1.5px solid var(--ink);background:var(--ink);color:var(--surface);cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--surface);color:var(--ink);border-color:var(--ink)}
+
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:20px}
+.logo{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.01em;color:var(--ink);text-decoration:none;display:flex;gap:7px}
+.logo .s{position:relative}
+.logo .s::after{content:"";position:absolute;left:-2px;right:-2px;top:52%;height:3px;background:var(--accent);transform:rotate(-8deg)}
+.saved{font-family:var(--mono);font-size:12px;color:var(--leaf)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:48px;align-items:end;padding-block:36px 52px}
+.hero h1{font-size:clamp(48px,9vw,116px);font-weight:800;letter-spacing:-.035em}
+.cv{position:relative;display:inline-block;color:#9AA9A2}
+.cv svg{position:absolute;left:-6%;top:8%;width:112%;height:84%;overflow:visible}
+.cv path{stroke:var(--accent);stroke-width:9;fill:none;stroke-linecap:round;stroke-dasharray:420;animation:strike .7s .3s ease-out both}
+@keyframes strike{from{stroke-dashoffset:420}to{stroke-dashoffset:0}}
+.lede{font-size:19px;max-width:36ch;margin:0}
+.lede mark{background:var(--mark);color:var(--mark-ink);padding:0 .15em}
+.hero-side{display:flex;flex-direction:column;gap:22px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* deal band */
+.deal{background:var(--surface);border:1.5px solid var(--ink);border-radius:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:hidden}
+.deal div{padding:24px;display:flex;flex-direction:column;gap:6px}
+.deal div+div{border-left:1px solid var(--line)}
+.deal b{font-family:var(--display);font-size:18px;font-weight:700}
+.deal p{margin:0;color:var(--muted);font-size:15px}
+.deal .if{background:var(--leaf-soft)}
+.deal .ifnot{background:var(--sky-soft)}
+
+/* teaser */
+.teaser{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:48px;padding-block:52px}
+.teaser h2{font-size:30px;font-weight:700}
+.tq{display:flex;flex-direction:column;border-top:1.5px solid var(--ink)}
+.tq div{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.tq span:first-child{font-family:var(--display);font-weight:800;color:var(--accent)}
+footer{padding-block:28px 40px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid var(--line)}
+
+/* apply */
+.apply{display:grid;grid-template-columns:260px minmax(0,1fr);gap:28px;align-items:start;padding-block:8px 60px}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;flex-direction:column;gap:4px}
+.rail .label{margin-bottom:8px}
+.step{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:center;padding:10px 12px;border-radius:12px;border:0;background:transparent;font:inherit;color:var(--muted);text-align:left;cursor:pointer}
+.step .dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:600 12px/1 var(--mono);border:1.5px solid var(--line);background:var(--surface)}
+.step.done{color:var(--ink)}
+.step.done .dot{background:var(--leaf);border-color:var(--leaf);color:var(--surface)}
+.step.on{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1.5px var(--ink)}
+.step.on .dot{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.step[disabled]{cursor:not-allowed;opacity:.6}
+.step .t{font-size:14px;line-height:1.3}
+.railnote{margin-top:14px;font-size:13px;color:var(--muted);background:var(--surface);border-radius:12px;padding:12px;border:1px solid var(--line)}
+.card{background:var(--surface);border:1.5px solid var(--ink);border-radius:22px;padding:clamp(20px,4vw,38px);display:flex;flex-direction:column;gap:20px;min-width:0}
+.qhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.qnum{font-family:var(--display);font-weight:800;font-size:13px;color:var(--accent)}
+.tag{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--paper);border-radius:999px;padding:5px 10px}
+.card h2{font-size:clamp(21px,3vw,28px);font-weight:700;letter-spacing:-.01em}
+.look{border-radius:14px;background:var(--paper);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.look ul{margin:0;padding-left:18px;color:var(--muted);font-size:14.5px;display:flex;flex-direction:column;gap:2px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field>label{font-weight:600;font-size:15px}
+.field .sub{font-weight:400;color:var(--muted)}
+input[type=text],input[type=email],input[type=tel],select,textarea{font:16px/1.55 var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:13px 15px;width:100%}
+textarea{resize:vertical;min-height:190px}
+textarea.why{min-height:110px}
+input:focus,select:focus,textarea:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 4px var(--accent-soft)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.meter{display:flex;flex-direction:column;gap:6px}
+.bar{height:6px;border-radius:3px;background:var(--line);position:relative;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--muted);border-radius:3px;transition:width .2s}
+.meter.ok .bar i{background:var(--leaf)}
+.meter.over .bar i{background:var(--warn)}
+.count{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.meter.ok .count{color:var(--leaf)}
+.meter.over .count{color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 14px/1 var(--body);padding:10px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip[aria-pressed=true]{border-color:var(--ink);background:var(--mark)}
+.nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.err{color:var(--warn);font-size:14px;margin:0;min-height:1em}
+.review-item{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:6px}
+.review-item p{margin:0;white-space:pre-wrap;font-size:15px}
+.review-item .why-txt{color:var(--muted)}
+.edit{font:600 13px/1 var(--body);background:none;border:0;color:var(--accent);cursor:pointer;padding:0;align-self:flex-start}
+
+/* membership card */
+.member{display:flex;flex-direction:column;align-items:center;gap:24px;padding-block:30px 60px;text-align:center}
+.mcard{width:min(420px,100%);aspect-ratio:1.586;max-width:100%;border-radius:20px;background:var(--mark);color:var(--ink);border:1.5px solid var(--ink);padding:24px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;position:relative;overflow:hidden}
+.mcard::after{content:"";position:absolute;right:-46px;top:-46px;width:190px;height:190px;border-radius:50%;border:26px solid var(--accent)}
+.mcard .club{font-family:var(--display);font-weight:800;font-size:20px;position:relative;z-index:1}
+.mcard .nm{font-family:var(--display);font-weight:700;font-size:22px}
+.mcard .meta{font-family:var(--mono);font-size:12px;display:flex;justify-content:space-between;gap:10px}
+
+/* reviewer */
+.desk-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px;padding-block:18px;border-bottom:1.5px solid var(--ink)}
+.desk-head h1{font-size:clamp(26px,4vw,38px);font-weight:800}
+.flag{font-family:var(--mono);font-size:12px;color:var(--warn);background:var(--warn-soft);border-radius:8px;padding:6px 10px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;padding-block:16px}
+.f{font:600 13.5px/1 var(--body);padding:9px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.f .n{font-family:var(--mono);font-weight:500;color:var(--muted)}
+.f[aria-pressed=true]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.f[aria-pressed=true] .n{color:var(--surface)}
+.desk{display:grid;grid-template-columns:minmax(0,370px) minmax(0,1fr);gap:20px;align-items:start;padding-bottom:50px}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{width:100%;text-align:left;font:inherit;color:inherit;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px}
+.row[aria-current=true]{border-color:var(--ink);box-shadow:0 0 0 3px var(--mark)}
+.row .nm{font-weight:600}
+.row .sm{font-size:13px;color:var(--muted)}
+.ex{font-family:var(--mono);font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 5px;margin-left:6px}
+.g{font-family:var(--display);font-weight:800;font-size:13px;min-width:34px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;padding:0 8px}
+.g.Star{background:var(--star-soft);color:var(--star)}
+.g.A{background:var(--leaf-soft);color:var(--leaf)}
+.g.B{background:var(--sky-soft);color:var(--sky)}
+.g.C{background:var(--warn-soft);color:var(--warn)}
+.g.none{background:var(--paper);color:var(--muted);border:1px dashed var(--line);font-family:var(--mono);font-weight:500;font-size:11px}
+.detail{background:var(--surface);border:1.5px solid var(--ink);border-radius:20px;padding:clamp(18px,3vw,28px);display:flex;flex-direction:column;gap:18px;min-width:0}
+.gradebar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gbtn{font-family:var(--display);font-weight:800;font-size:14px;min-width:56px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.gbtn[aria-pressed=true]{border-color:var(--ink);background:var(--ink);color:var(--surface)}
+.ai{border:1.5px dashed var(--sky);border-radius:12px;padding:12px 14px;font-size:14.5px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;background:var(--sky-soft)}
+.ans{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:6px}
+.ans h3{font-family:var(--body);font-weight:600;font-size:15px}
+.ans p{margin:0;white-space:pre-wrap;font-size:15px}
+.ans .w{color:var(--muted)}
+.rubric{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.rubric div{background:var(--paper);border-radius:10px;padding:10px;font-size:13px}
+.rubric b{display:block;font-family:var(--display);font-size:12px;margin-bottom:3px}
+.empty{padding:30px;text-align:center;color:var(--muted);border:1.5px dashed var(--line);border-radius:14px}
+
+@media (max-width:860px){
+  .hero,.teaser{grid-template-columns:minmax(0,1fr);gap:28px}
+  .deal{grid-template-columns:minmax(0,1fr)}
+  .deal div+div{border-left:0;border-top:1px solid var(--line)}
+  .apply{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static;flex-direction:row;overflow-x:auto;gap:6px}
+  .rail .label,.railnote{display:none}
+  .step{grid-template-columns:28px;padding:6px}
+  .step .t{display:none}
+  .desk{grid-template-columns:minmax(0,1fr)}
+  .grid2,.rubric{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){.cv path{animation:none}.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#home" aria-label="No CV Club home">No <span class="s">CV</span> Club</a>
+    <span class="saved" id="savedNote" aria-live="polite"></span>
+  </header>
+</div>
+
+<!-- HOME -->
+<main id="v-home" class="wrap">
+  <section class="hero">
+    <h1>No <span class="cv">CV<svg viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true"><path d="M2 46 C 30 30, 60 22, 98 10"/></svg></span><br>Club</h1>
+    <div class="hero-side">
+      <p class="lede">A small team is hiring final year students and fresh graduates. We will not look at your marks, your college rank or your CV. <mark>Answer five hard questions.</mark> That is the whole application.</p>
+      <div class="cta-row">
+        <a class="btn" href="#apply">Try it →</a>
+        <span class="small">It's quick. Your answers save as you type.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="deal" aria-label="What you get">
+    <div><span class="label">The deal</span><b>You answer five questions.</b><p>Real situations, no right answers. Every answer comes with a why.</p></div>
+    <div class="if"><span class="label">If we like how you think</span><b>We call you, and we hire you.</b><p>A short conversation, then an offer. Your answers are the interview.</p></div>
+    <div class="ifnot"><span class="label">If we don't</span><b>You lose nothing.</b><p>A short detour, and you will have thought harder than most interviews ever ask you to.</p></div>
+  </section>
+
+  <footer style="margin-top:52px">
+    <span class="small">No CV Club. Applications are read by people, not filters.</span>
+    <a class="small" href="#review">Reviewer desk (team only)</a>
+  </footer>
+</main>
+
+<!-- APPLY -->
+<main id="v-apply" class="wrap" hidden>
+  <div class="apply">
+    <nav class="rail" id="rail" aria-label="Your progress"></nav>
+    <form id="form" novalidate></form>
+  </div>
+</main>
+
+<!-- DONE -->
+<main id="v-done" class="wrap" hidden>
+  <div class="member">
+    <span class="label">Application received</span>
+    <div class="mcard" aria-label="Your No CV Club card">
+      <div class="club">No CV Club</div>
+      <div>
+        <div class="nm" id="cardName">Name</div>
+        <div class="meta"><span id="cardNo">Member #0000</span><span id="cardDate">Date</span></div>
+      </div>
+    </div>
+    <h2 style="font-size:26px;font-weight:700">You are in. Now we read.</h2>
+    <p class="small" style="max-width:46ch;margin:0">A person reads every answer. If we like how you think, we will call you. If we don't, you lost nothing, and you are still a member of the club.</p>
+    <p class="small" style="max-width:52ch;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px">Prototype: answers stay in this browser and are not sent anywhere yet.</p>
+    <div class="cta-row" style="justify-content:center"><a class="btn ghost" href="#home">Back to the start</a><a class="btn" href="#review">Open the reviewer desk</a></div>
+  </div>
+</main>
+
+<!-- REVIEW -->
+<main id="v-review" class="wrap" hidden>
+  <div class="desk-head">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span class="label">Team only · candidates never see this</span>
+      <h1>Reviewer desk</h1>
+    </div>
+    <span class="flag">Example applicants are marked EXAMPLE</span>
+  </div>
+  <div class="filters" id="filters" role="group" aria-label="Filter by grade"></div>
+  <div class="desk">
+    <div class="list" id="list"></div>
+    <section class="detail" id="detail" aria-live="polite"></section>
+  </div>
+</main>
+
+<script>
+(function(){
+const Q = [
+  { id:"chai", short:"The ₹5 question", tag:"pricing",
+    title:"A chai stall outside your college sells 300 cups a day at ₹15. The owner asks you: should he go up to ₹20? What do you tell him, and how would he find out without risking his business?",
+    look:["A clear yes, no or 'it depends on X'","A cheap way to test before he commits","What could go wrong, in numbers"],
+    why:"Why do you trust your reasoning here?" },
+  { id:"book", short:"One book for every 18 year old", tag:"books",
+    title:"You can make one book compulsory for every 18 year old in India. Which book, and what would you remove from the school syllabus to make room for it?",
+    look:["A book you have actually read","What it would change in how they think","A real cut, and what is lost by cutting it"],
+    why:"Why that book over every other one you have read?" },
+  { id:"wrong", short:"What everyone gets wrong", tag:"how you think",
+    title:"What is something most people around you believe that you think is wrong? It can be about money, careers, family, religion, success, anything.",
+    look:["A belief you can name plainly","What made you see it differently","What it costs you to think this"],
+    why:"Why haven't you changed your mind, when most people disagree?" },
+  { id:"ban", short:"No social media under 18", tag:"second order",
+    title:"Tomorrow India bans social media for everyone under 18. Who wins, who loses, what happens six months later that nobody expects? Would you vote for it?",
+    look:["Winners and losers you can name","At least one effect most people would miss","A clear vote, yes or no"],
+    why:"Why does your vote still hold after the downsides?" },
+  { id:"secret", short:"The scholarship secret", tag:"character",
+    title:"Your closest friend tells you they cheated in the exam that won them a scholarship. You came second and lost it. Nobody else knows. What do you do?",
+    look:["What you would actually do, not what you should do","What you owe your friend, and what you owe yourself","What happens to the friendship after"],
+    why:"Why is that the right thing for you, even if others would choose differently?" }
+];
+const MIN={ans:60,why:20}, MAX={ans:300,why:120};
+const ROLES=["Marketing","Sales","Growth","Events","Not sure yet"];
+const STORE="nocvclub.v2";
+
+const EXAMPLES=[
+  {id:"ex1",example:true,name:"Aditi R.",better:"Getting shopkeepers to say yes. I sold my college fest sponsorships door to door.",roles:["Sales","Events"],when:"2 days ago",ai:"Star",aiWhy:"Tests the chai price on two days a week before deciding, and picks a book with a real trade off in the syllabus cut.",grade:null,
+   answers:{chai:{a:"Not straight to ₹20. I would tell him to sell at ₹20 on Tuesdays and Thursdays for two weeks and keep ₹15 on other days, and count cups. If he sells more than 225 a day at ₹20 he earns more, so that is the number to watch. The risk is students moving to the stall across the road, so I would also watch that stall's queue.",w:"My uncle runs a tea shop and the one time he raised prices overnight, the college crowd left for a month."},
+            book:{a:"Thinking, Fast and Slow. I would cut one of the two history textbooks we memorise for boards. We would lose some dates, but people would learn why they fall for offers, rumours and their own first guesses, which matters more at 18 than the year of a treaty.",w:"I read it in second year after losing money on a stock tip from a friend, and it explained exactly what I did wrong."}}},
+  {id:"ex2",example:true,name:"Rohan K.",better:"Starting conversations with strangers in cafes without it feeling weird.",roles:["Growth"],when:"3 days ago",ai:"A",aiWhy:"Names a belief most of his family holds and what it costs him to disagree. The scholarship answer is honest but short.",grade:"A",
+   answers:{wrong:{a:"Most people around me believe a government job is the safest life. I think it is the riskiest, because you spend 30 years getting good at one thing that only one employer pays for. My parents still bring it up every month.",w:"I watched my uncle lose his footing completely when his department was merged. Safety only looks safe until it isn't."}}},
+  {id:"ex3",example:true,name:"Sana M.",better:"Noticing why people actually buy things, not why they say they do.",roles:["Marketing"],when:"4 days ago",ai:"B",aiWhy:"Thoughtful on the social media ban, but the book answer reads like a summary of the blurb.",grade:null,answers:{}},
+  {id:"ex4",example:true,name:"Vikas P.",better:"Hard work and dedication.",roles:["Sales"],when:"5 days ago",ai:"C",aiWhy:"Answers read as AI generated: balanced lists, no decisions, and the why boxes repeat the answers.",grade:"C",answers:{}},
+  {id:"ex5",example:true,name:"Neha S.",better:"Explaining complicated things to my grandmother.",roles:["Growth","Marketing"],when:"1 week ago",ai:"A",aiWhy:"Votes against the ban with a surprising second order effect (fake age accounts) and answers the scholarship question with unusual honesty.",grade:"Star",answers:{}}
+];
+
+const BLANK=()=>({name:"",email:"",better:"",roles:[],answers:{}});
+let state={step:0,data:BLANK(),filter:"all",sel:null,apps:[]};
+function load(){ try{ const s=JSON.parse(localStorage.getItem(STORE)||"null"); if(s){ state.data=Object.assign(state.data,s.data||{}); state.step=s.step||0; state.apps=s.apps||[]; } }catch(e){} }
+let savedTimer;
+function save(show){ try{ localStorage.setItem(STORE,JSON.stringify({data:state.data,step:state.step,apps:state.apps})); }catch(e){}
+  if(show){ const n=document.getElementById("savedNote"); n.textContent="Saved"; clearTimeout(savedTimer); savedTimer=setTimeout(()=>{n.textContent="";},1600);} }
+function words(t){ return (t||"").trim().split(/\s+/).filter(Boolean).length; }
+function el(tag,attrs,kids){ const n=document.createElement(tag); if(attrs) for(const k in attrs){ if(k==="text") n.textContent=attrs[k]; else if(k.startsWith("on")) n.addEventListener(k.slice(2),attrs[k]); else n.setAttribute(k,attrs[k]); } (kids||[]).forEach(c=>{ if(c) n.appendChild(c); }); return n; }
+
+// Review mode: lets the team click through every screen without filling anything in. Set to false before launch.
+const REVIEW_MODE=true;
+
+// ---------- APPLY ----------
+const STEPS=["About you"].concat(Q.map(q=>q.short)).concat(["Read and send"]);
+function stepDone(i){ if(i===0){ const d=state.data; return !!(d.name.trim()&&/^\S+@\S+\.\S+$/.test(d.email)&&words(d.better)>=5); }
+  if(i<=Q.length){ const a=state.data.answers[Q[i-1].id]||{}; const na=words(a.a),nw=words(a.w); return na>=MIN.ans&&na<=MAX.ans&&nw>=MIN.why&&nw<=MAX.why; } return false; }
+function reachable(i){ if(REVIEW_MODE) return true; for(let k=0;k<i;k++){ if(!stepDone(k)) return false; } return true; }
+function go(i){ state.step=i; save(); renderForm(); window.scrollTo(0,0); }
+function renderRail(){ const r=document.getElementById("rail"); r.textContent=""; r.appendChild(el("span",{class:"label",text:"Your application"}));
+  STEPS.forEach((s,i)=>{ const cls="step"+(i===state.step?" on":stepDone(i)?" done":""); const b=el("button",{type:"button",class:cls,"aria-current":i===state.step?"step":"false","aria-label":s,onclick:()=>{ if(reachable(i)) go(i); }},[el("span",{class:"dot",text: stepDone(i)&&i!==state.step?"✓": i===0?"·": i>Q.length?"→": String(i)}),el("span",{class:"t",text:s})]); if(!reachable(i)) b.disabled=true; r.appendChild(b); });
+  r.appendChild(el("p",{class:"railnote",text: REVIEW_MODE ? "Review mode: every screen is open and nothing is required. Turn this off before launch." : "Take your time. You can close this page and come back; your answers stay in this browser."})); }
+function meter(ta,min,max){ const m=el("div",{class:"meter"}); const bar=el("div",{class:"bar"},[el("i")]); const c=el("div",{class:"count"},[el("span"),el("span")]);
+  function upd(){ const n=words(ta.value); bar.firstChild.style.width=Math.min(100,n/max*100)+"%"; m.classList.toggle("ok",n>=min&&n<=max); m.classList.toggle("over",n>max);
+    c.firstChild.textContent= n>max? "Over the limit by "+(n-max): n<min? (min-n)+" more words": "Good length"; c.lastChild.textContent=n+" / "+max+" words"; }
+  ta.addEventListener("input",upd); upd(); m.appendChild(bar); m.appendChild(c); return m; }
+function fieldText(id,label,type,val,sub,auto){ const i=el("input",{type:type,id:id,name:id,autocomplete:auto||"off"}); i.value=val||""; i.addEventListener("input",()=>{state.data[id]=i.value; save(true); renderRail();}); return el("div",{class:"field"},[el("label",{for:id},[document.createTextNode(label),sub?el("span",{class:"sub",text:" "+sub}):null]),i]); }
+function renderForm(){
+  if(!reachable(state.step)) state.step=0;
+  renderRail();
+  const f=document.getElementById("form"); f.textContent="";
+  const card=el("div",{class:"card"}); f.appendChild(card);
+  const err=el("p",{class:"err",role:"alert"});
+  const nav=el("div",{class:"nav"});
+  nav.appendChild(el("button",{type:"button",class:"btn ghost",text:"← Back",onclick:()=>{ if(state.step===0){ nav("home"); return;} go(state.step-1); }}));
+  if(state.step===0){
+    card.appendChild(el("div",{class:"qhead"},[el("span",{class:"qnum",text:"BEFORE WE START"})]));
+    card.appendChild(el("h2",{text:"Just enough to reach you. No marks, no CV."}));
+    const g=el("div",{class:"grid2"});
+    g.appendChild(fieldText("name","Your name","text",state.data.name,null,"name"));
+    g.appendChild(fieldText("email","Email","email",state.data.email,null,"email"));
+    card.appendChild(g);
+    const bt=el("textarea",{id:"better",name:"better",class:"why",placeholder:"One thing, said plainly. It does not have to be about work."}); bt.value=state.data.better||"";
+    bt.addEventListener("input",()=>{state.data.better=bt.value; save(true); renderRail();});
+    card.appendChild(el("div",{class:"field"},[el("label",{for:"better",text:"What are you better at than most people?"}),bt]));
+    const chips=el("div",{class:"chips",role:"group","aria-label":"Work that interests you"});
+    ROLES.forEach(r=>{ const b=el("button",{type:"button",class:"chip","aria-pressed":String(state.data.roles.includes(r)),text:r,onclick:()=>{ const i=state.data.roles.indexOf(r); if(i>-1) state.data.roles.splice(i,1); else state.data.roles.push(r); b.setAttribute("aria-pressed",String(i===-1)); save(true); }}); chips.appendChild(b); });
+    card.appendChild(el("div",{class:"field"},[el("span",{style:"font-weight:600;font-size:15px",text:"Which work interests you? Pick any."}),chips]));
+    card.appendChild(err);
+    nav.appendChild(el("button",{type:"submit",class:"btn",text:"See question 1 →"}));
+  } else if(state.step<=Q.length){
+    const q=Q[state.step-1]; const a=state.data.answers[q.id]||{a:"",w:""};
+    card.appendChild(el("div",{class:"qhead"},[el("span",{class:"qnum",text:"QUESTION "+state.step+" OF "+Q.length}),el("span",{class:"tag",text:q.tag})]));
+    card.appendChild(el("h2",{text:q.title}));
+    const look=el("div",{class:"look"},[el("span",{class:"label",text:"A strong answer has"}),el("ul",{},q.look.map(t=>el("li",{text:t})))]);
+    card.appendChild(look);
+    const ta=el("textarea",{id:"a-"+q.id,name:"a-"+q.id,placeholder:"Write it the way you would say it out loud."}); ta.value=a.a;
+    const tw=el("textarea",{id:"w-"+q.id,name:"w-"+q.id,class:"why"}); tw.value=a.w;
+    const sync=()=>{ state.data.answers[q.id]={a:ta.value,w:tw.value}; save(true); renderRail(); };
+    ta.addEventListener("input",sync); tw.addEventListener("input",sync);
+    card.appendChild(el("div",{class:"field"},[el("label",{for:ta.id,text:"Your answer"}),ta,meter(ta,MIN.ans,MAX.ans)]));
+    card.appendChild(el("div",{class:"field"},[el("label",{for:tw.id},[document.createTextNode("Why? "),el("span",{class:"sub",text:q.why})]),tw,meter(tw,MIN.why,MAX.why)]));
+    card.appendChild(err);
+    nav.appendChild(el("button",{type:"submit",class:"btn",text: state.step===Q.length?"Read it all once more →":"Next question →"}));
+  } else {
+    card.appendChild(el("div",{class:"qhead"},[el("span",{class:"qnum",text:"LAST STEP"})]));
+    card.appendChild(el("h2",{text:"Read it once more, then send it."}));
+    card.appendChild(el("p",{class:"small",style:"margin:0",text:[state.data.name,state.data.email].filter(Boolean).join(" · ")}));
+    if(state.data.better) card.appendChild(el("div",{class:"review-item"},[el("span",{class:"label",text:"Better at than most people"}),el("p",{text:state.data.better}),el("button",{type:"button",class:"edit",text:"Edit",onclick:()=>go(0)})]));
+    Q.forEach((q,i)=>{ const a=state.data.answers[q.id]||{}; card.appendChild(el("div",{class:"review-item"},[el("span",{class:"label",text:(i+1)+". "+q.short}),el("p",{text:a.a||""}),el("p",{class:"why-txt",text:"Why: "+(a.w||"")}),el("button",{type:"button",class:"edit",text:"Edit this answer",onclick:()=>go(i+1)})])); });
+    const ok=el("input",{type:"checkbox",id:"own"});
+    card.appendChild(el("div",{class:"field",style:"flex-direction:row;align-items:center;gap:10px"},[ok,el("label",{for:"own",style:"font-weight:500",text:"I wrote these answers myself."})]));
+    card.appendChild(err);
+    nav.appendChild(el("button",{type:"submit",class:"btn",text:"Send my answers"}));
+  }
+  f.appendChild(nav);
+  f.onsubmit=(e)=>{ e.preventDefault(); err.textContent="";
+    if(REVIEW_MODE && state.step<=Q.length){ go(state.step+1); return; }
+    if(state.step===0){ if(!stepDone(0)){ err.textContent="Add your name, a valid email, and one thing you are better at than most people."; return; } }
+    else if(state.step<=Q.length){ const q=Q[state.step-1]; const a=state.data.answers[q.id]||{a:"",w:""}; const na=words(a.a),nw=words(a.w);
+      if(na<MIN.ans){ err.textContent="Your answer needs at least "+MIN.ans+" words. You have "+na+"."; return; }
+      if(na>MAX.ans){ err.textContent="Keep your answer under "+MAX.ans+" words. You have "+na+"."; return; }
+      if(nw<MIN.why){ err.textContent="Your why needs at least "+MIN.why+" words. You have "+nw+"."; return; }
+      if(nw>MAX.why){ err.textContent="Keep your why under "+MAX.why+" words."; return; } }
+    else { if(!REVIEW_MODE && !document.getElementById("own").checked){ err.textContent="Tick the box to confirm you wrote the answers yourself."; return; }
+      const no=String(1000+state.apps.length+Math.floor(Math.random()*90)).padStart(4,"0");
+      const app={id:"me"+Date.now(),example:false,name:state.data.name||"Unnamed applicant",email:state.data.email,better:state.data.better,roles:state.data.roles.slice(),when:"Just now",ai:null,aiWhy:"",grade:null,answers:JSON.parse(JSON.stringify(state.data.answers))};
+      state.apps.unshift(app); const nm=app.name;
+      state.data=BLANK(); state.step=0; save();
+      document.getElementById("cardName").textContent=nm; document.getElementById("cardNo").textContent="Member #"+no;
+      document.getElementById("cardDate").textContent=new Date().toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+      showView("done"); return; }
+    go(state.step+1); };
+}
+
+// ---------- REVIEW ----------
+const GRADES=["Star","A","B","C"];
+function allApps(){ return state.apps.concat(EXAMPLES); }
+function gradeChip(g){ return el("span",{class:"g "+(g||"none"),text: g?(g==="Star"?"★ Star":g):"not graded"}); }
+function renderReview(){
+  const apps=allApps();
+  const fl=document.getElementById("filters"); fl.textContent="";
+  [["all","All"],["none","Not graded"],["Star","★ Star"],["A","A"],["B","B"],["C","C"]].forEach(([k,l])=>{ const n=apps.filter(a=>k==="all"?true:k==="none"?!a.grade:a.grade===k).length;
+    fl.appendChild(el("button",{type:"button",class:"f","aria-pressed":String(state.filter===k),onclick:()=>{state.filter=k; renderReview();}},[document.createTextNode(l),el("span",{class:"n",text:String(n)})])); });
+  const shown=apps.filter(a=>state.filter==="all"?true:state.filter==="none"?!a.grade:a.grade===state.filter);
+  const list=document.getElementById("list"); list.textContent="";
+  if(!shown.length) list.appendChild(el("div",{class:"empty",text:"No applicants with this grade yet."}));
+  if(!state.sel||!shown.find(a=>a.id===state.sel)) state.sel=shown[0]?shown[0].id:null;
+  shown.forEach(a=>{ list.appendChild(el("button",{type:"button",class:"row","aria-current":String(a.id===state.sel),onclick:()=>{state.sel=a.id; renderReview();}},[el("span",{class:"nm"},[document.createTextNode(a.name),a.example?el("span",{class:"ex",text:"EXAMPLE"}):null]),gradeChip(a.grade),el("span",{class:"sm",text:"Better at: "+(a.better||"not given")}),el("span",{class:"sm",text:a.when})])); });
+  const d=document.getElementById("detail"); d.textContent="";
+  const a=apps.find(x=>x.id===state.sel);
+  if(!a){ d.appendChild(el("div",{class:"empty",text:"Pick an applicant to read their answers."})); return; }
+  d.appendChild(el("div",{style:"display:flex;flex-direction:column;gap:4px"},[el("span",{class:"label",text:(a.example?"Example applicant · ":"")+a.when}),el("h2",{style:"font-size:24px;font-weight:700",text:a.name}),el("span",{class:"small",text:"Better at: "+(a.better||"not given")+" · Interested in "+(a.roles.join(", ")||"not stated")})]));
+  d.appendChild(el("div",{class:"ai"},[el("span",{class:"label",text:"AI first pass"}),a.ai?gradeChip(a.ai):el("span",{class:"small",text:"Waiting for the AI read"}),el("span",{text:a.aiWhy||"New applications get an AI first pass before a person reads them."})]));
+  const gb=el("div",{class:"gradebar",role:"group","aria-label":"Your grade"},[el("span",{class:"label",style:"margin-right:6px",text:"Your grade"})]);
+  GRADES.forEach(g=>gb.appendChild(el("button",{type:"button",class:"gbtn","aria-pressed":String(a.grade===g),text:g==="Star"?"★ Star":g,onclick:()=>{ a.grade=a.grade===g?null:g; if(!a.example) save(); renderReview(); }})));
+  d.appendChild(gb);
+  d.appendChild(el("div",{class:"rubric"},[
+    el("div",{},[el("b",{text:"Thinking"}),document.createTextNode("Reasons, trade offs, second order effects.")]),
+    el("div",{},[el("b",{text:"Decisiveness"}),document.createTextNode("Makes a call instead of listing options.")]),
+    el("div",{},[el("b",{text:"Honesty"}),document.createTextNode("Real numbers, admits what they don't know.")]),
+    el("div",{},[el("b",{text:"Clarity"}),document.createTextNode("Own words, specific, easy to follow.")])]));
+  let any=false;
+  Q.forEach((q,i)=>{ const x=a.answers[q.id]; if(!x) return; any=true; d.appendChild(el("div",{class:"ans"},[el("h3",{text:(i+1)+". "+q.short}),el("p",{text:x.a}),el("p",{class:"w",text:"Why: "+x.w})])); });
+  if(!any) d.appendChild(el("p",{class:"small",style:"margin:0",text:"Example applicant: only the summary is filled in."}));
+}
+
+// ---------- ROUTER ----------
+function showView(v){ ["home","apply","done","review"].forEach(x=>document.getElementById("v-"+x).hidden=x!==v); window.scrollTo(0,0); }
+function route(h){ if(typeof h!=="string") h=(location.hash||"#home").slice(1);
+  if(h==="apply"){ showView("apply"); renderForm(); } else if(h==="review"){ showView("review"); renderReview(); } else showView("home"); }
+// In-page links are handled in script so they work inside embedded viewers too.
+function nav(h){ route(h); try{ if(location.hash.slice(1)!==h) history.replaceState(null,"","#"+h); }catch(e){} }
+document.addEventListener("click",function(e){ const a=e.target.closest('a[href^="#"]'); if(!a) return; e.preventDefault(); nav(a.getAttribute("href").slice(1)); });
+load(); window.addEventListener("hashchange",function(){ route(); }); route();
+})();
+</script>
+
+</body></html>
